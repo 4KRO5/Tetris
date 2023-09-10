@@ -9,4 +9,5 @@ function draw() {
     background('lightgray');
     tablero.dibujar();
     tetrimino.dibujar();
+    keyEvents();
 }
