@@ -12,7 +12,6 @@ class Tablero {
         return createVector(x, y).mult(this.ladoCelda).add(this.posicion);
     }
 
-    // Impresión del Tablero
     dibujar() {
         push();
         noStroke();
