@@ -8,6 +8,8 @@ class Tetrimino {
             this.mapa.push(element.copy());
         }
         this.posicion = createVector(4, 1);
+        this.lastFallTime = 0;
+        this.fallInterval = 1000;
     }
 
     dibujar() {
@@ -23,9 +25,74 @@ class Tetrimino {
     }
 
     caer() {
-        if (frameCount % 60 === 0) { // Ajusta este valor para controlar la velocidad de caída
-            this.posicion.y++;
+        if (millis() - this.lastFallTime > this.fallInterval) {
+            this.lastFallTime = millis();
+
+            if (!this.colisionAbajo()) {
+                this.posicion.y++;
+            } else {
+                this.detener();
+            }
         }
+    }
+
+    moverHorizontalmente(direccion) {
+        let nuevaPosicion = this.posicion.copy();
+        nuevaPosicion.x += direccion;
+
+        if (!this.colisionParedes(nuevaPosicion)) {
+            this.posicion.x = nuevaPosicion.x;
+        }
+    }
+
+    colisionParedes(nuevaPosicion) {
+        for (const celda of this.mapa) {
+            let x = nuevaPosicion.x + celda.x;
+            let y = nuevaPosicion.y + celda.y;
+
+            if (x < 0 || x >= tablero.columnas || y >= tablero.filas || tablero.celdaOcupada(x, y)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    colisionAbajo() {
+        for (const celda of this.mapa) {
+            let x = this.posicion.x + celda.x;
+            let y = this.posicion.y + celda.y + 1;
+
+            if (x < 0 || x >= tablero.columnas || y >= tablero.filas || tablero.celdaOcupada(x, y)) {
+                return true;
+            }
+        }
+
+        for (const celda of this.mapa) {
+            let x = this.posicion.x + celda.x;
+            let y = this.posicion.y + celda.y + 1;
+
+            if (tablero.celdaOcupada(x, y)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    detener() {
+        for (const celda of this.mapa) {
+            let x = this.posicion.x + celda.x;
+            let y = this.posicion.y + celda.y;
+            tablero.ocuparCelda(x, y, this.color);
+        }
+        this.nombre = random(["Z", "S", "J", "L", "T", "O", "I"]);
+        let tetrimino = tetriminos[this.nombre];
+        this.color = tetrimino.color;
+        this.mapa = [];
+        for (const element of tetrimino.mapa) {
+            this.mapa.push(element.copy());
+        }
+        this.posicion = createVector(4, 1);
     }
 }
 

@@ -4,15 +4,17 @@ const inputDelay = 200;
 function keyEvents() {
     if (millis() - lastKeyPressTime > inputDelay) {
         if (keyIsDown(RIGHT_ARROW)) {
-            tetrimino.posicion.x++;
+            tetrimino.moverHorizontalmente(1);
             lastKeyPressTime = millis();
         }
         if (keyIsDown(LEFT_ARROW)) {
-            tetrimino.posicion.x--;
+            tetrimino.moverHorizontalmente(-1);
             lastKeyPressTime = millis();
         }
         if (keyIsDown(DOWN_ARROW)) {
-            tetrimino.posicion.y++
+            if (!tetrimino.colisionAbajo()) {
+                tetrimino.posicion.y++;
+            }
             lastKeyPressTime = millis();
         }
         if (keyIsDown(UP_ARROW)) {
