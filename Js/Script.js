@@ -12,10 +12,9 @@ function keyEvents() {
             lastKeyPressTime = millis();
         }
         if (keyIsDown(DOWN_ARROW)) {
-            if (!tetrimino.colisionAbajo()) {
-                tetrimino.posicion.y++;
-            }
-            lastKeyPressTime = millis();
+            tetrimino.fallInterval = 200;
+        } else {
+            tetrimino.fallInterval = 1000;
         }
         if (keyIsDown(UP_ARROW)) {
             tetrimino.posicion.y--
