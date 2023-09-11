@@ -12,12 +12,12 @@ function keyEvents() {
             lastKeyPressTime = millis();
         }
         if (keyIsDown(DOWN_ARROW)) {
-            tetrimino.fallInterval = 200;
+            tetrimino.fallInterval = 100;
         } else {
             tetrimino.fallInterval = 1000;
         }
         if (keyIsDown(UP_ARROW)) {
-            tetrimino.posicion.y--
+            tetrimino.rotar();
             lastKeyPressTime = millis();
         }
     }

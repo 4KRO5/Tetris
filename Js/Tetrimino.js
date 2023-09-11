@@ -24,6 +24,54 @@ class Tetrimino {
         pop();
     }
 
+    rotar() {
+        const nuevaMapa = [];
+        const longitud = this.mapa.length;
+    
+        for (let i = 0; i < longitud; i++) {
+            const x = this.mapa[i].y;
+            const y = -this.mapa[i].x;
+            nuevaMapa.push(createVector(x, y));
+        }
+    
+        // Intenta aplicar la rotación sin ajuste
+        if (!this.colisionParedes(this.posicion, nuevaMapa) && !this.colisionTetriminos(this.posicion, nuevaMapa)) {
+            this.mapa = nuevaMapa;
+            return; // Rotación exitosa sin necesidad de ajuste
+        }
+    
+        // Si la rotación no es posible, intenta ajustar hacia la izquierda
+        this.posicion.x--;
+        
+        if (!this.colisionParedes(this.posicion, nuevaMapa) && !this.colisionTetriminos(this.posicion, nuevaMapa)) {
+            this.mapa = nuevaMapa;
+            return; // Rotación exitosa con ajuste hacia la izquierda
+        }
+    
+        // Si la rotación hacia la izquierda no es posible, intenta ajustar hacia la derecha
+        this.posicion.x += 2;
+    
+        if (!this.colisionParedes(this.posicion, nuevaMapa) && !this.colisionTetriminos(this.posicion, nuevaMapa)) {
+            this.mapa = nuevaMapa;
+            return; // Rotación exitosa con ajuste hacia la derecha
+        }
+    
+        // Si no es posible hacer la rotación ni ajustes, restaura la posición original
+        this.posicion.x--;
+    
+    }    
+
+    colisionTetriminos(posicion, mapa) {
+        for (const punto of mapa) {
+            const x = posicion.x + punto.x;
+            const y = posicion.y + punto.y;
+            if (x < 0 || x >= tablero.columnas || y >= tablero.filas || tablero.celdaOcupada(x, y)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     caer() {
         if (millis() - this.lastFallTime > this.fallInterval) {
             this.lastFallTime = millis();
