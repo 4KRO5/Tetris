@@ -11,7 +11,7 @@ class Tablero {
     coordenada(x, y) {
         return createVector(x, y).mult(this.ladoCelda).add(this.posicion);
     }
-
+    
     dibujar() {
         push();
         noStroke();
