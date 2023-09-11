@@ -9,6 +9,7 @@ function setup() {
 
 function draw() {
     tablero.dibujar();
+    tetrimino.caer(); // Llama al método caer() para que el tetrimino caiga automáticamente
     tetrimino.dibujar();
     keyEvents();
 }

@@ -21,6 +21,12 @@ class Tetrimino {
         }
         pop();
     }
+
+    caer() {
+        if (frameCount % 60 === 0) { // Ajusta este valor para controlar la velocidad de caída
+            this.posicion.y++;
+        }
+    }
 }
 
 function mapeosTetriminos() {
@@ -82,10 +88,10 @@ function mapeosTetriminos() {
         I: {
             color: "cyan",
             mapa: [
-                createVector(),
-                createVector(-1, 0),
-                createVector(1, 0),
-                createVector(2, 0),
+                createVector(0, -1),
+                createVector(-1, -1),
+                createVector(1, -1),
+                createVector(2, -1),
             ],
         },
     };
