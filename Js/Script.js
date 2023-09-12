@@ -10,7 +10,7 @@ function keyEvents() {
         if (keyIsDown(LEFT_ARROW)) {
             tetrimino.moverHorizontalmente(-1);
             lastKeyPressTime = millis();
-        }
+        }Implemetanción 
         if (keyIsDown(DOWN_ARROW)) {
             tetrimino.fallInterval = 100;
         } else {
@@ -19,6 +19,15 @@ function keyEvents() {
         if (keyIsDown(UP_ARROW)) {
             tetrimino.rotar();
             lastKeyPressTime = millis();
+        }
+        if (keyIsDown(32) && !spacePressed) { // 32 es el código de la tecla espacio
+            spacePressed = true;
+            while (!tetrimino.colisionAbajo()) {
+                tetrimino.posicion.y++;
+            }
+            tetrimino.detener();
+        } else if (!keyIsDown(32)) {
+            spacePressed = false;
         }
     }
 }
