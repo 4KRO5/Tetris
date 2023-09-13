@@ -15,7 +15,6 @@ class Tablero {
     eliminarFilasCompletas() {
         let filasParaEliminar = [];
 
-        // Verifica si cada fila está completa
         for (let fila = this.filas - 1; fila >= 0; fila--) {
             let filaCompleta = true;
             for (let columna = 0; columna < this.columnas; columna++) {
@@ -32,6 +31,10 @@ class Tablero {
 
         for (const filaEliminar of filasParaEliminar) {
             this.matriz.splice(filaEliminar, 1);
+        }
+
+        const filasFaltantes = this.filas - this.matriz.length;
+        for (let i = 0; i < filasFaltantes; i++) {
             this.matriz.unshift(new Array(this.columnas).fill(0));
         }
     }
