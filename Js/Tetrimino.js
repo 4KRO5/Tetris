@@ -1,10 +1,6 @@
 class Tetrimino {
     constructor(nombre = random(["Z", "S", "J", "L", "T", "O", "I"])) {
         this.nombre = nombre;
-        this.inicializarTetrimino();
-    }
-
-    inicializarTetrimino() {
         const tetriminoInfo = tetriminos[this.nombre];
         this.color = tetriminoInfo.color;
         this.mapa = tetriminoInfo.mapa.map(element => element.copy());

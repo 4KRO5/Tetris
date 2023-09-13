@@ -49,3 +49,23 @@ function keyEvents() {
         }
     }
 }
+
+const tetriminoGuardadoCanvas = document.getElementById('tetriminoGuardadoCanvas');
+const tetriminoGuardadoCtx = tetriminoGuardadoCanvas.getContext('2d');
+
+function dibujarTetriminoGuardado(tetrimino) {
+    tetriminoGuardadoCtx.clearRect(0, 0, tetriminoGuardadoCanvas.width, tetriminoGuardadoCanvas.height);
+    const ladoCelda = tetriminoGuardadoCanvas.width / 4;
+    tetriminoGuardadoCtx.fillStyle = tetrimino.color;
+    for (const celda of tetrimino.mapa) {
+        const x = celda.x * ladoCelda + tetriminoGuardadoCanvas.width / 2;
+        const y = celda.y * ladoCelda + tetriminoGuardadoCanvas.height / 2;
+        tetriminoGuardadoCtx.fillRect(x, y, ladoCelda, ladoCelda);
+    }
+}
+
+function actualizarTetriminoGuardado() {
+    if (tetriminoGuardado) {
+        dibujarTetriminoGuardado(tetriminoGuardado);
+    }
+}

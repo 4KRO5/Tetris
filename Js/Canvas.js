@@ -3,14 +3,13 @@ let tetriminoActivo;
 let tetriminoGuardado;
 
 function setup() {
-    createCanvas(500, 500);
+    createCanvas(250, 500);
     background(220);
     tablero = new Tablero();
     mapeosTetriminos();
     tetriminoActivo = new Tetrimino();
     tetriminoGuardado = null;
-
-    // resizeCanvas(tablero.ancho, tablero.alto);
+    //resizeCanvas(tablero.ancho, tablero.alto);
 }
 
 function draw() {
@@ -28,4 +27,6 @@ function draw() {
         fill(255, 0, 0);
         text("Game Over", tablero.ancho / 2 - 80, tablero.alto / 2);
     }
+
+    actualizarTetriminoGuardado();
 }
