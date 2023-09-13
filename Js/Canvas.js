@@ -12,8 +12,16 @@ function setup() {
 function draw() {
     background('white');
     tablero.dibujar();
-    tetrimino.caer();
-    tetrimino.dibujar();
-    tablero.eliminarFilasCompletas();
-    keyEvents();
+    if (!tablero.comprobarGameOver(tetrimino)) {
+        tetrimino.caer();
+        tetrimino.dibujar();
+        tablero.eliminarFilasCompletas();
+        keyEvents();
+    } else {
+        fill(0, 0, 0, 175);
+        rect(0, 0, width, height);
+        textSize(32);
+        fill(255, 0, 0);
+        text("Game Over", width / 2 - 80, height / 2);
+    }
 }

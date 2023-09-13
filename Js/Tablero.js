@@ -12,6 +12,18 @@ class Tablero {
         }
     }
 
+    comprobarGameOver(tetrimino) {
+        for (const celda of tetrimino.mapa) {
+            const x = tetrimino.posicion.x + celda.x;
+            const y = tetrimino.posicion.y + celda.y;
+
+            if (y >= 0 && (this.celdaOcupada(x, y) || y >= this.filas)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     eliminarFilasCompletas() {
         let filasParaEliminar = [];
 
