@@ -1,33 +1,51 @@
 let lastKeyPressTime = 0;
 const inputDelay = 200;
+let savedThisTurn = false;
 
 function keyEvents() {
     if (millis() - lastKeyPressTime > inputDelay) {
         if (keyIsDown(RIGHT_ARROW)) {
-            tetrimino.moverHorizontalmente(1);
+            tetriminoActivo.moverHorizontalmente(1);
             lastKeyPressTime = millis();
         }
         if (keyIsDown(LEFT_ARROW)) {
-            tetrimino.moverHorizontalmente(-1);
+            tetriminoActivo.moverHorizontalmente(-1);
             lastKeyPressTime = millis();
         }
         if (keyIsDown(DOWN_ARROW)) {
-            tetrimino.fallInterval = 100;
+            tetriminoActivo.fallInterval = 100;
         } else {
-            tetrimino.fallInterval = 1000;
+            tetriminoActivo.fallInterval = 1000;
         }
         if (keyIsDown(UP_ARROW)) {
-            tetrimino.rotar();
+            tetriminoActivo.rotar();
             lastKeyPressTime = millis();
         }
         if (keyIsDown(32) && !spacePressed) {
             spacePressed = true;
-            while (!tetrimino.colisionAbajo()) {
-                tetrimino.posicion.y++;
+            while (!tetriminoActivo.colisionAbajo()) {
+                tetriminoActivo.posicion.y++;
             }
-            tetrimino.detener();
+            tetriminoActivo.detener();
+            savedThisTurn = false;
         } else if (!keyIsDown(32)) {
             spacePressed = false;
+        }
+        if (keyIsDown(83) && !sPressed && !savedThisTurn) {
+            sPressed = true;
+            if (tetriminoGuardado) {
+                const temp = tetriminoActivo;
+                tetriminoActivo = tetriminoGuardado;
+                tetriminoGuardado = temp;
+                tetriminoActivo.posicion.x = 4;
+                tetriminoActivo.posicion.y = 0;
+            } else {
+                tetriminoGuardado = tetriminoActivo;
+                tetriminoActivo = new Tetrimino();
+            }
+            savedThisTurn = true;
+        } else if (!keyIsDown(83)) {
+            sPressed = false;
         }
     }
 }

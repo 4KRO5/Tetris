@@ -1,27 +1,31 @@
 let tablero;
-let tetrimino;
+let tetriminoActivo;
+let tetriminoGuardado;
 
 function setup() {
-    createCanvas(250, 500);
+    createCanvas(500, 500);
+    background(220);
     tablero = new Tablero();
     mapeosTetriminos();
-    tetrimino = new Tetrimino();
-    resizeCanvas(tablero.ancho, tablero.alto);
+    tetriminoActivo = new Tetrimino();
+    tetriminoGuardado = null;
+
+    // resizeCanvas(tablero.ancho, tablero.alto);
 }
 
 function draw() {
-    background('white');
+    background('blue');
     tablero.dibujar();
-    if (!tablero.comprobarGameOver(tetrimino)) {
-        tetrimino.caer();
-        tetrimino.dibujar();
+    if (!tablero.comprobarGameOver(tetriminoActivo)) {
+        tetriminoActivo.caer();
+        tetriminoActivo.dibujar();
         tablero.eliminarFilasCompletas();
         keyEvents();
     } else {
         fill(0, 0, 0, 175);
-        rect(0, 0, width, height);
+        rect(0, 0, tablero.ancho, tablero.alto);
         textSize(32);
         fill(255, 0, 0);
-        text("Game Over", width / 2 - 80, height / 2);
+        text("Game Over", tablero.ancho / 2 - 80, tablero.alto / 2);
     }
 }
