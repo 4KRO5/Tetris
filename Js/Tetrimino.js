@@ -1,12 +1,13 @@
 class Tetrimino {
     constructor(nombre = random(["Z", "S", "J", "L", "T", "O", "I"])) {
         this.nombre = nombre;
-        let tetrimino = tetriminos[nombre];
-        this.color = tetrimino.color;
-        this.mapa = [];
-        for (const element of tetrimino.mapa) {
-            this.mapa.push(element.copy());
-        }
+        this.inicializarTetrimino();
+    }
+
+    inicializarTetrimino() {
+        const tetriminoInfo = tetriminos[this.nombre];
+        this.color = tetriminoInfo.color;
+        this.mapa = tetriminoInfo.mapa.map(element => element.copy());
         this.posicion = createVector(4, 1);
         this.lastFallTime = 0;
         this.fallInterval = 1000;
@@ -27,39 +28,31 @@ class Tetrimino {
     rotar() {
         const nuevaMapa = [];
         const longitud = this.mapa.length;
-    
+
         for (let i = 0; i < longitud; i++) {
             const x = this.mapa[i].y;
             const y = -this.mapa[i].x;
             nuevaMapa.push(createVector(x, y));
         }
-    
-        // Intenta aplicar la rotación sin ajuste
+
         if (!this.colisionParedes(this.posicion, nuevaMapa) && !this.colisionTetriminos(this.posicion, nuevaMapa)) {
             this.mapa = nuevaMapa;
-            return; // Rotación exitosa sin necesidad de ajuste
+            return;
         }
-    
-        // Si la rotación no es posible, intenta ajustar hacia la izquierda
         this.posicion.x--;
-        
+
         if (!this.colisionParedes(this.posicion, nuevaMapa) && !this.colisionTetriminos(this.posicion, nuevaMapa)) {
             this.mapa = nuevaMapa;
-            return; // Rotación exitosa con ajuste hacia la izquierda
+            return;
         }
-    
-        // Si la rotación hacia la izquierda no es posible, intenta ajustar hacia la derecha
         this.posicion.x += 2;
-    
+
         if (!this.colisionParedes(this.posicion, nuevaMapa) && !this.colisionTetriminos(this.posicion, nuevaMapa)) {
             this.mapa = nuevaMapa;
-            return; // Rotación exitosa con ajuste hacia la derecha
+            return;
         }
-    
-        // Si no es posible hacer la rotación ni ajustes, restaura la posición original
         this.posicion.x--;
-    
-    }    
+    }
 
     colisionTetriminos(posicion, mapa) {
         for (const punto of mapa) {
@@ -203,10 +196,10 @@ function mapeosTetriminos() {
         I: {
             color: "cyan",
             mapa: [
-                createVector(0, -1),
-                createVector(-1, -1),
-                createVector(1, -1),
-                createVector(2, -1),
+                createVector(),
+                createVector(-1, 0),
+                createVector(1, 0),
+                createVector(2, 0),
             ],
         },
     };

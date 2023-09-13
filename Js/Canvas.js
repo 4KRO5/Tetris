@@ -1,3 +1,6 @@
+let tablero;
+let tetrimino;
+
 function setup() {
     createCanvas(250, 500);
     tablero = new Tablero();
@@ -11,5 +14,6 @@ function draw() {
     tablero.dibujar();
     tetrimino.caer();
     tetrimino.dibujar();
+    tablero.eliminarFilasCompletas();
     keyEvents();
 }

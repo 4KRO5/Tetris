@@ -12,8 +12,35 @@ class Tablero {
         }
     }
 
+    eliminarFilasCompletas() {
+        let filasParaEliminar = [];
+
+        // Verifica si cada fila está completa
+        for (let fila = this.filas - 1; fila >= 0; fila--) {
+            let filaCompleta = true;
+            for (let columna = 0; columna < this.columnas; columna++) {
+                if (this.matriz[fila][columna] === 0) {
+                    filaCompleta = false;
+                    break;
+                }
+            }
+
+            if (filaCompleta) {
+                filasParaEliminar.push(fila);
+            }
+        }
+
+        for (const filaEliminar of filasParaEliminar) {
+            this.matriz.splice(filaEliminar, 1);
+            this.matriz.unshift(new Array(this.columnas).fill(0));
+        }
+    }
+
     celdaOcupada(x, y) {
-        return this.matriz[y][x] !== 0;
+        if (this.matriz && this.matriz[y] && this.matriz[y][x] !== undefined) {
+            return this.matriz[y][x] !== 0;
+        }
+        return false;
     }
 
     ocuparCelda(x, y, color) {
