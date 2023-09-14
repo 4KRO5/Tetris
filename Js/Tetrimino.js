@@ -1,202 +1,136 @@
 class Tetrimino {
-    constructor(nombre = random(["Z", "S", "J", "L", "T", "O", "I"])) {
-        this.nombre = nombre;
-        const tetriminoInfo = tetriminos[this.nombre];
-        this.color = tetriminoInfo.color;
-        this.mapa = tetriminoInfo.mapa.map(element => element.copy());
-        this.posicion = createVector(4, 1);
-        this.lastFallTime = 0;
-        this.fallInterval = 1000;
-    }
+	constructor(nombre = random(["Z", "S", "J", "L", "T", "O", "I"])) {
+		this.nombre = nombre;
+		this.color = tetriminos[nombre].color;
+		this.mapa = tetriminos[nombre].mapa.map(element => element.copy());
+		this.posición = createVector(4, 1);
+		this.lastFallTime = 0;
+	}
 
-    dibujar() {
-        push();
-        fill(this.color);
-        for (const celda of this.mapa) {
-            let x = this.posicion.x + celda.x;
-            let y = this.posicion.y + celda.y;
-            let c = tablero.coordenada(x, y);
-            rect(c.x, c.y, tablero.ladoCelda);
-        }
-        pop();
-    }
+	dibujar() {
+		fill(this.color);
+		const ladoCelda = tablero.ladoCelda;
 
-    rotar() {
-        const nuevaMapa = [];
-        const longitud = this.mapa.length;
+		for (const celda of this.mapa) {
+			let x = this.posición.x + celda.x;
+			let y = this.posición.y + celda.y;
+			let c = tablero.coordenada(x, y);
+			rect(c.x, c.y, ladoCelda);
+		}
+	}
 
-        for (let i = 0; i < longitud; i++) {
-            const x = this.mapa[i].y;
-            const y = -this.mapa[i].x;
-            nuevaMapa.push(createVector(x, y));
-        }
+	rotar() {
+		const nuevaMapa = this.rotarMapa();
 
-        if (!this.colisionParedes(this.posicion, nuevaMapa) && !this.colisionTetriminos(this.posicion, nuevaMapa)) {
-            this.mapa = nuevaMapa;
-            return;
-        }
-        this.posicion.x--;
+		if (!this.hayColisión(nuevaMapa)) {
+			this.mapa = nuevaMapa;
+		} else {
+			this.posición.x--;
 
-        if (!this.colisionParedes(this.posicion, nuevaMapa) && !this.colisionTetriminos(this.posicion, nuevaMapa)) {
-            this.mapa = nuevaMapa;
-            return;
-        }
-        this.posicion.x += 2;
+			if (!this.hayColisión(nuevaMapa)) {
+				this.mapa = nuevaMapa;
+			} else {
+				this.posición.x += 2;
 
-        if (!this.colisionParedes(this.posicion, nuevaMapa) && !this.colisionTetriminos(this.posicion, nuevaMapa)) {
-            this.mapa = nuevaMapa;
-            return;
-        }
-        this.posicion.x--;
-    }
+				if (!this.hayColisión(nuevaMapa)) {
+					this.mapa = nuevaMapa;
+				} else {
+					this.posición.x--;
+				}
+			}
+		}
+	}
 
-    colisionTetriminos(posicion, mapa) {
-        for (const punto of mapa) {
-            const x = posicion.x + punto.x;
-            const y = posicion.y + punto.y;
-            if (x < 0 || x >= tablero.columnas || y >= tablero.filas || tablero.celdaOcupada(x, y)) {
-                return true;
-            }
-        }
-        return false;
-    }
+	rotarMapa() {
+		const nuevaMapa = [];
+		const longitud = this.mapa.length;
 
-    caer() {
-        if (millis() - this.lastFallTime > this.fallInterval) {
-            this.lastFallTime = millis();
+		for (let i = 0; i < longitud; i++) {
+			const x = this.mapa[i].y;
+			const y = -this.mapa[i].x;
+			nuevaMapa.push(createVector(x, y));
+		}
+		return nuevaMapa;
+	}
 
-            if (!this.colisionAbajo()) {
-                this.posicion.y++;
-            } else {
-                this.detener();
-            }
-        }
-    }
+	hayColisión(nuevaMapa) {
+		return this.colisiónParedes(this.posición, nuevaMapa) || this.colisiónTetriminos(this.posición, nuevaMapa);
+	}
 
-    moverHorizontalmente(direccion) {
-        let nuevaPosicion = this.posicion.copy();
-        nuevaPosicion.x += direccion;
 
-        if (!this.colisionParedes(nuevaPosicion)) {
-            this.posicion.x = nuevaPosicion.x;
-        }
-    }
+	colisiónTetriminos(posición, mapa) {
+		for (const punto of mapa) {
+			const x = posición.x + punto.x;
+			const y = posición.y + punto.y;
+			if (x < 0 || x >= tablero.columnas || y >= tablero.filas || tablero.celdaOcupada(x, y)) {
+				return true;
+			}
+		}
+		return false;
+	}
 
-    colisionParedes(nuevaPosicion) {
-        for (const celda of this.mapa) {
-            let x = nuevaPosicion.x + celda.x;
-            let y = nuevaPosicion.y + celda.y;
+	caer() {
+		const tiempoActual = millis();
 
-            if (x < 0 || x >= tablero.columnas || y >= tablero.filas || tablero.celdaOcupada(x, y)) {
-                return true;
-            }
-        }
-        return false;
-    }
+		if (tiempoActual - this.lastFallTime > this.fallInterval) {
+			this.lastFallTime = tiempoActual;
 
-    colisionAbajo() {
-        for (const celda of this.mapa) {
-            let x = this.posicion.x + celda.x;
-            let y = this.posicion.y + celda.y + 1;
+			if (!this.colisiónAbajo()) {
+				this.posición.y++;
+			} else {
+				return this.detener();
+			}
+		}
+	}
 
-            if (x < 0 || x >= tablero.columnas || y >= tablero.filas || tablero.celdaOcupada(x, y)) {
-                return true;
-            }
-        }
+	moverHorizontalmente(dirección) {
+		if (!this.colisiónParedes({ x: this.posición.x + dirección, y: this.posición.y })) {
+			this.posición.x += dirección;
+		}
+	}
 
-        for (const celda of this.mapa) {
-            let x = this.posicion.x + celda.x;
-            let y = this.posicion.y + celda.y + 1;
+	colisiónParedes(nuevaPosición) {
+		for (const celda of this.mapa) {
+			let x = nuevaPosición.x + celda.x;
+			let y = nuevaPosición.y + celda.y;
 
-            if (tablero.celdaOcupada(x, y)) {
-                return true;
-            }
-        }
+			if (x < 0 || x >= tablero.columnas || y >= tablero.filas || tablero.celdaOcupada(x, y)) {
+				return true;
+			}
+		}
+		return false;
+	}
 
-        return false;
-    }
+	colisiónAbajo() {
+		for (const celda of this.mapa) {
+			let x = this.posición.x + celda.x;
+			let y = this.posición.y + celda.y + 1;
 
-    detener() {
-        for (const celda of this.mapa) {
-            let x = this.posicion.x + celda.x;
-            let y = this.posicion.y + celda.y;
-            tablero.ocuparCelda(x, y, this.color);
-        }
-        this.nombre = random(["Z", "S", "J", "L", "T", "O", "I"]);
-        let tetrimino = tetriminos[this.nombre];
-        this.color = tetrimino.color;
-        this.mapa = [];
-        for (const element of tetrimino.mapa) {
-            this.mapa.push(element.copy());
-        }
-        this.posicion = createVector(4, 1);
-    }
+			if (x < 0 || x >= tablero.columnas || y >= tablero.filas || tablero.celdaOcupada(x, y)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	detener() {
+		for (const celda of this.mapa) {
+			let x = this.posición.x + celda.x;
+			let y = this.posición.y + celda.y;
+			tablero.ocuparCelda(x, y, this.color);
+		}
+		return true;
+	}
 }
 
-function mapeosTetriminos() {
-    tetriminos = {
-        Z: {
-            color: "red",
-            mapa: [
-                createVector(),
-                createVector(-1, -1),
-                createVector(0, -1),
-                createVector(1, 0),
-            ],
-        },
-        S: {
-            color: "lime",
-            mapa: [
-                createVector(),
-                createVector(1, -1),
-                createVector(0, -1),
-                createVector(-1, 0),
-            ],
-        },
-        J: {
-            color: "orange",
-            mapa: [
-                createVector(),
-                createVector(-1, 0),
-                createVector(-1, -1),
-                createVector(1, 0),
-            ],
-        },
-        L: {
-            color: "dodgerblue",
-            mapa: [
-                createVector(),
-                createVector(-1, 0),
-                createVector(1, -1),
-                createVector(1, 0),
-            ],
-        },
-        T: {
-            color: "magenta",
-            mapa: [
-                createVector(),
-                createVector(-1, 0),
-                createVector(1, 0),
-                createVector(0, -1),
-            ],
-        },
-        O: {
-            color: "yellow",
-            mapa: [
-                createVector(),
-                createVector(0, -1),
-                createVector(1, -1),
-                createVector(1, 0),
-            ],
-        },
-        I: {
-            color: "cyan",
-            mapa: [
-                createVector(),
-                createVector(-1, 0),
-                createVector(1, 0),
-                createVector(2, 0),
-            ],
-        },
-    };
+function mapeoTetriminos() {
+	tetriminos = {
+		Z: { color: "red", mapa: [createVector(0, 0), createVector(-1, -1), createVector(0, -1), createVector(1, 0)] },
+		S: { color: "lime", mapa: [createVector(0, 0), createVector(1, -1), createVector(0, -1), createVector(-1, 0)] },
+		J: { color: "orange", mapa: [createVector(0, 0), createVector(-1, 0), createVector(-1, -1), createVector(1, 0)] },
+		L: { color: "dodgerblue", mapa: [createVector(0, 0), createVector(-1, 0), createVector(1, -1), createVector(1, 0)] },
+		T: { color: "magenta", mapa: [createVector(0, 0), createVector(-1, 0), createVector(1, 0), createVector(0, -1)] },
+		O: { color: "yellow", mapa: [createVector(0, 0), createVector(0, -1), createVector(1, -1), createVector(1, 0)] },
+		I: { color: "cyan", mapa: [createVector(0, 0), createVector(-1, 0), createVector(1, 0), createVector(2, 0)] }
+	};
 }

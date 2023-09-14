@@ -1,47 +1,39 @@
 let lastKeyPressTime = 0;
-const inputDelay = 200;
+const inputDelay = 150;
 let savedThisTurn = false;
 
 function keyEvents() {
     if (millis() - lastKeyPressTime > inputDelay) {
-        if (keyIsDown(RIGHT_ARROW)) {
-            tetriminoActivo.moverHorizontalmente(1);
-            lastKeyPressTime = millis();
-        }
-        if (keyIsDown(LEFT_ARROW)) {
-            tetriminoActivo.moverHorizontalmente(-1);
-            lastKeyPressTime = millis();
-        }
-        if (keyIsDown(DOWN_ARROW)) {
-            tetriminoActivo.fallInterval = 100;
-        } else {
+        if (keyIsDown(UP_ARROW)) { tetriminoActivo.rotar(); lastKeyPressTime = millis(); }
+        if (keyIsDown(RIGHT_ARROW)) { tetriminoActivo.moverHorizontalmente(1); lastKeyPressTime = millis(); }
+        if (keyIsDown(LEFT_ARROW)) { tetriminoActivo.moverHorizontalmente(-1); lastKeyPressTime = millis(); }
+        if (keyIsDown(DOWN_ARROW)) { tetriminoActivo.fallInterval = 100; } else {
             tetriminoActivo.fallInterval = 1000;
         }
-        if (keyIsDown(UP_ARROW)) {
-            tetriminoActivo.rotar();
-            lastKeyPressTime = millis();
-        }
+
         if (keyIsDown(32) && !spacePressed) {
             spacePressed = true;
-            while (!tetriminoActivo.colisionAbajo()) {
-                tetriminoActivo.posicion.y++;
+            while (!tetriminoActivo.colisiónAbajo()) {
+                tetriminoActivo.posición.y++;
             }
-            tetriminoActivo.detener();
+            if (tetriminoActivo.detener()) {
+                generarNuevoTetrimino();
+            }
+
             savedThisTurn = false;
         } else if (!keyIsDown(32)) {
             spacePressed = false;
         }
+
         if (keyIsDown(83) && !sPressed && !savedThisTurn) {
             sPressed = true;
             if (tetriminoGuardado) {
-                const temp = tetriminoActivo;
-                tetriminoActivo = tetriminoGuardado;
-                tetriminoGuardado = temp;
-                tetriminoActivo.posicion.x = 4;
-                tetriminoActivo.posicion.y = 0;
+                [tetriminoActivo, tetriminoGuardado] = [tetriminoGuardado, tetriminoActivo];
+                tetriminoActivo.posición.x = 4;
+                tetriminoActivo.posición.y = 0;
             } else {
                 tetriminoGuardado = tetriminoActivo;
-                tetriminoActivo = new Tetrimino();
+                generarNuevoTetrimino();
             }
             savedThisTurn = true;
         } else if (!keyIsDown(83)) {
@@ -50,22 +42,50 @@ function keyEvents() {
     }
 }
 
-const tetriminoGuardadoCanvas = document.getElementById('tetriminoGuardadoCanvas');
-const tetriminoGuardadoCtx = tetriminoGuardadoCanvas.getContext('2d');
+function generarNuevoTetrimino() {
+    tetriminoActivo = colaTetriminos[0];
+    colaTetriminos[0] = colaTetriminos[1];
+    colaTetriminos[1] = colaTetriminos[2];
+    colaTetriminos[2] = new Tetrimino();
+}
 
-function dibujarTetriminoGuardado(tetrimino) {
-    tetriminoGuardadoCtx.clearRect(0, 0, tetriminoGuardadoCanvas.width, tetriminoGuardadoCanvas.height);
-    const ladoCelda = tetriminoGuardadoCanvas.width / 4;
-    tetriminoGuardadoCtx.fillStyle = tetrimino.color;
+function dibujarTetriminoEnCanvas(canvas, tetrimino) {
+    const ctx = canvas.getContext('2d');
+    const ladoCelda = canvas.width / 4;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = tetrimino.color;
+
     for (const celda of tetrimino.mapa) {
-        const x = celda.x * ladoCelda + tetriminoGuardadoCanvas.width / 2;
-        const y = celda.y * ladoCelda + tetriminoGuardadoCanvas.height / 2;
-        tetriminoGuardadoCtx.fillRect(x, y, ladoCelda, ladoCelda);
+        const x = celda.x * ladoCelda + canvas.width / 4;
+        const y = celda.y * ladoCelda + canvas.height / 2;
+        ctx.fillRect(x, y, ladoCelda, ladoCelda);
     }
 }
 
 function actualizarTetriminoGuardado() {
     if (tetriminoGuardado) {
-        dibujarTetriminoGuardado(tetriminoGuardado);
+        dibujarTetriminoEnCanvas(tetriminoGuardadoCanvas, tetriminoGuardado);
     }
 }
+
+function mostrarGameOver() {
+    fill(0, 0, 0, 175);
+    rect(0, 0, tablero.ancho, tablero.alto);
+
+    textSize(32);
+    fill(255, 0, 0);
+
+    const x = tablero.ancho / 2 - 80;
+    const y = tablero.alto / 2;
+
+    text("Game Over", x, y);
+}
+
+/////////////////////////////////////////////////////////////////////////////
+// function actualizarColaTetriminosGuardados() {
+//     for (let i = 0; i < colaTetriminosGuardados.length; i++) {
+//         const tetrimino = colaTetriminosGuardados[i];
+//         dibujarTetriminoEnCanvas(colaTetriminosGuardadosCanvas, tetrimino);
+//     }
+// }

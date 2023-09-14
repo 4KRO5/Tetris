@@ -5,38 +5,29 @@ class Tablero {
         this.ladoCelda = 25;
         this.ancho = this.columnas * this.ladoCelda;
         this.alto = this.filas * this.ladoCelda;
-        this.posicion = createVector(0, 0);
-        this.matriz = [];
-        for (let i = 0; i < this.filas; i++) {
-            this.matriz.push(new Array(this.columnas).fill(0));
-        }
+        this.posición = createVector(0, 0);
+        this.matriz = Array.from({ length: this.filas }, () => new Array(this.columnas).fill(0));
     }
 
-    comprobarGameOver(tetrimino) {
-        for (const celda of tetrimino.mapa) {
-            const x = tetrimino.posicion.x + celda.x;
-            const y = tetrimino.posicion.y + celda.y;
-
-            if (y >= 0 && (this.celdaOcupada(x, y) || y >= this.filas)) {
-                return true;
+    dibujar() {
+        push();
+        noStroke();
+        for (let fila = 0; fila < this.filas; fila++) {
+            for (let columna = 0; columna < this.columnas; columna++) {
+                const valor = this.matriz[fila][columna];
+                const color = valor !== 0 ? valor : (fila + columna) % 2 === 0 ? 'black' : '#005';
+                fill(color);
+                rect(columna * this.ladoCelda, fila * this.ladoCelda, this.ladoCelda);
             }
         }
-        return false;
+        pop();
     }
 
     eliminarFilasCompletas() {
-        let filasParaEliminar = [];
+        const filasParaEliminar = [];
 
         for (let fila = this.filas - 1; fila >= 0; fila--) {
-            let filaCompleta = true;
-            for (let columna = 0; columna < this.columnas; columna++) {
-                if (this.matriz[fila][columna] === 0) {
-                    filaCompleta = false;
-                    break;
-                }
-            }
-
-            if (filaCompleta) {
+            if (this.matriz[fila].every(valor => valor !== 0)) {
                 filasParaEliminar.push(fila);
             }
         }
@@ -51,32 +42,25 @@ class Tablero {
         }
     }
 
-    celdaOcupada(x, y) {
-        if (this.matriz && this.matriz[y] && this.matriz[y][x] !== undefined) {
-            return this.matriz[y][x] !== 0;
-        }
-        return false;
-    }
-
-    ocuparCelda(x, y, color) {
-        this.matriz[y][x] = color;
+    comprobarGameOver(tetrimino) {
+        return tetrimino.mapa.some(celda => {
+            const x = tetrimino.posición.x + celda.x;
+            const y = tetrimino.posición.y + celda.y;
+            return (y >= 0 && (this.celdaOcupada(x, y) || y >= this.filas));
+        });
     }
 
     coordenada(x, y) {
-        return createVector(x, y).mult(this.ladoCelda).add(this.posicion);
+        return createVector(x, y).mult(this.ladoCelda).add(this.posición);
     }
 
-    dibujar() {
-        push();
-        noStroke();
-        for (let columna = 0; columna < this.columnas; columna++) {
-            for (let fila = 0; fila < this.filas; fila++) {
-                const valor = this.matriz[fila][columna];
-                fill(valor !== 0 ? valor : (columna + fila) % 2 === 0 ? 'black' : '#005');
-                let c = this.coordenada(columna, fila);
-                rect(c.x, c.y, this.ladoCelda);
-            }
+    celdaOcupada(x, y) {
+        return this.matriz && this.matriz[y] && this.matriz[y][x] !== 0;
+    }
+
+    ocuparCelda(x, y, color) {
+        if (this.matriz && this.matriz[y]) {
+            this.matriz[y][x] = color;
         }
-        pop();
     }
 }
