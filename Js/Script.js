@@ -42,6 +42,19 @@ function keyEvents() {
     }
 }
 
+function mostrarGameOver() {
+    fill(0, 0, 0, 175);
+    rect(0, 0, tablero.ancho, tablero.alto);
+
+    textSize(32);
+    fill(255, 0, 0);
+
+    const x = tablero.ancho / 2 - 80;
+    const y = tablero.alto / 2;
+
+    text("Game Over", x, y);
+}
+
 function generarNuevoTetrimino() {
     tetriminoActivo = colaTetriminos[0];
     colaTetriminos[0] = colaTetriminos[1];
@@ -51,9 +64,9 @@ function generarNuevoTetrimino() {
 
 function dibujarTetriminoEnCanvas(canvas, tetrimino) {
     const ctx = canvas.getContext('2d');
-    const ladoCelda = canvas.width / 4;
+    const ladoCelda = 100 / 4;
 
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, 100, 100);
     ctx.fillStyle = tetrimino.color;
 
     for (const celda of tetrimino.mapa) {
@@ -69,23 +82,21 @@ function actualizarTetriminoGuardado() {
     }
 }
 
-function mostrarGameOver() {
-    fill(0, 0, 0, 175);
-    rect(0, 0, tablero.ancho, tablero.alto);
+function dibujarColaTetriminos() {
+    const ladoCeldaCola = 100 / 4;
 
-    textSize(32);
-    fill(255, 0, 0);
+    const ctxCola = colaTetriminosCanvas.elt.getContext('2d');
+    ctxCola.clearRect(0, 0, 100, 300);
 
-    const x = tablero.ancho / 2 - 80;
-    const y = tablero.alto / 2;
-
-    text("Game Over", x, y);
+    for (let i = 0; i < colaTetriminos.length; i++) {
+        const tetrimino = colaTetriminos[i];
+        if (tetrimino) {
+            const x = 25;
+            const y = i * 100 + 50;
+            for (const celda of tetrimino.mapa) {
+                ctxCola.fillStyle = tetrimino.color;
+                ctxCola.fillRect(x + celda.x * ladoCeldaCola, y + celda.y * ladoCeldaCola, ladoCeldaCola, ladoCeldaCola);
+            }
+        }
+    }
 }
-
-/////////////////////////////////////////////////////////////////////////////
-// function actualizarColaTetriminosGuardados() {
-//     for (let i = 0; i < colaTetriminosGuardados.length; i++) {
-//         const tetrimino = colaTetriminosGuardados[i];
-//         dibujarTetriminoEnCanvas(colaTetriminosGuardadosCanvas, tetrimino);
-//     }
-// }

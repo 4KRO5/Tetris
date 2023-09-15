@@ -4,11 +4,7 @@ let tetriminoGuardado;
 let colaTetriminos = [null, null, null];
 
 function setup() {
-    const canvasWidth = 250;
-    const canvasHeight = 500;
-
-    createCanvas(canvasWidth, canvasHeight);
-    background(220);
+    createCanvas(250, 500).position(250, 100);
 
     tablero = new Tablero();
     mapeoTetriminos();
@@ -17,11 +13,12 @@ function setup() {
     tetriminoActivo = new Tetrimino();
     tetriminoGuardado = null;
 
+    colaTetriminosCanvas = select("#colaTetriminosCanvas");
+
     resizeCanvas(tablero.ancho, tablero.alto);
 }
 
 function draw() {
-    background('blue');
     tablero.dibujar();
 
     if (!tablero.comprobarGameOver(tetriminoActivo)) {
@@ -34,5 +31,5 @@ function draw() {
     }
 
     actualizarTetriminoGuardado();
-    //actualizarColaTetriminosGuardados();
+    dibujarColaTetriminos();
 }
