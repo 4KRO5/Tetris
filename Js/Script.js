@@ -42,14 +42,20 @@ function keyEvents() {
     }
 }
 
+function displayScore() {
+    fill(255);
+    textSize(20);
+    text("Score: " + score, 10, 30);
+}
+
 function mostrarGameOver() {
-    fill(0, 0, 0, 175);
+    fill(0, 0, 0, 150);
     rect(0, 0, tablero.ancho, tablero.alto);
 
     textSize(32);
     fill(255, 0, 0);
 
-    const x = tablero.ancho / 2 - 80;
+    const x = tablero.ancho / 2 - 102;
     const y = tablero.alto / 2;
 
     text("Game Over", x, y);

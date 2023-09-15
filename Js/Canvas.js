@@ -2,7 +2,10 @@ let tablero;
 let tetriminoActivo;
 let tetriminoGuardado;
 let colaTetriminos = [null, null, null];
+<<<<<<< HEAD
 let tiempoTranscurrido = 0;
+=======
+>>>>>>> 42bd05983313c3f6e1b515d5f490dca921b9b1cb
 let score = 0;
 
 function setup() {
