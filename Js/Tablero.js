@@ -32,6 +32,24 @@ class Tablero {
             }
         }
 
+        const numRowsCleared = filasParaEliminar.length;
+
+        let pointsEarned = 0;
+
+        if (numRowsCleared === 1) {
+            pointsEarned = 100;
+        } else if (numRowsCleared === 2) {
+            pointsEarned = 300;
+        } else if (numRowsCleared === 3) {
+            pointsEarned = 500;
+        } else if (numRowsCleared === 4) {
+            pointsEarned = 800;
+        }
+
+        score += pointsEarned;
+
+        displayScore();
+
         for (const filaEliminar of filasParaEliminar) {
             this.matriz.splice(filaEliminar, 1);
         }
