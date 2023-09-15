@@ -55,6 +55,15 @@ function mostrarGameOver() {
     text("Game Over", x, y);
 }
 
+function displayScore() {
+    fill(255);
+    textSize(20);
+    const scoreText = "Score: " + score;
+    const timeText = "Time: " + Math.floor(millis() / 1000);
+    text(scoreText, 10, 30);
+    text(timeText, 10, 50);
+}
+
 function generarNuevoTetrimino() {
     tetriminoActivo = colaTetriminos[0];
     colaTetriminos[0] = colaTetriminos[1];

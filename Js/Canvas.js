@@ -2,6 +2,8 @@ let tablero;
 let tetriminoActivo;
 let tetriminoGuardado;
 let colaTetriminos = [null, null, null];
+let tiempoTranscurrido = 0;
+let score = 0;
 
 function setup() {
     createCanvas(250, 500).position(250, 100);
@@ -13,7 +15,12 @@ function setup() {
     tetriminoActivo = new Tetrimino();
     tetriminoGuardado = null;
 
+    displayScore();
+
     colaTetriminosCanvas = select("#colaTetriminosCanvas");
+
+    font = loadFont('../Font/Retro Gaming.ttf');
+    textFont(font);
 
     resizeCanvas(tablero.ancho, tablero.alto);
 }
