@@ -59,8 +59,6 @@ function draw() {
     dibujarColaTetriminos();
 }
 
-// ...
-
 function toggleGame() {
     juegoPausado = !juegoPausado;
     const playButton = select("#playButton");
