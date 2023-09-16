@@ -19,7 +19,6 @@ const stages = [
     { scoreRequired: 2700, fallInterval: 100 },
     { scoreRequired: 3000, fallInterval: 50 },
 ];
-let score = 0;
 
 function setup() {
     createCanvas(250, 500).position(250, 100);
