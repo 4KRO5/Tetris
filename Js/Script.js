@@ -78,10 +78,10 @@ function displayScore() {
 }
 
 function generarNuevoTetrimino() {
-    tetriminoActivo = colaTetriminos[0];
-    colaTetriminos[0] = colaTetriminos[1];
-    colaTetriminos[1] = colaTetriminos[2];
-    colaTetriminos[2] = new Tetrimino();
+    tetriminoActivo = colaTetriminos[2];
+    colaTetriminos[2] = colaTetriminos[1];
+    colaTetriminos[1] = colaTetriminos[0];
+    colaTetriminos[0] = new Tetrimino();
 }
 
 function dibujarTetriminoEnCanvas(canvas, tetrimino) {
