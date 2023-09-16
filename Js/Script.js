@@ -1,5 +1,5 @@
 let lastKeyPressTime = 0;
-const inputDelay = 150;
+const inputDelay = 100;
 let savedThisTurn = false;
 
 function keyEvents() {
@@ -8,7 +8,7 @@ function keyEvents() {
         if (keyIsDown(RIGHT_ARROW)) { tetriminoActivo.moverHorizontalmente(1); lastKeyPressTime = millis(); }
         if (keyIsDown(LEFT_ARROW)) { tetriminoActivo.moverHorizontalmente(-1); lastKeyPressTime = millis(); }
         if (keyIsDown(DOWN_ARROW)) { tetriminoActivo.fallInterval = 100; } else {
-            tetriminoActivo.fallInterval = 1000;
+            tetriminoActivo.fallInterval = fallSpeed;
         }
 
         if (keyIsDown(32) && !spacePressed) {
@@ -68,6 +68,13 @@ function displayScore() {
     const timeText = "Time: " + Math.floor(millis() / 1000);
     text(scoreText, 10, 30);
     text(timeText, 10, 50);
+
+    if (level < stages.length) {
+        if (stages[level].scoreRequired <= score) {
+            fallSpeed = stages[level].fallInterval;
+            level++;
+        }
+    }
 }
 
 function generarNuevoTetrimino() {
