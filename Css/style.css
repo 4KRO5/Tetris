@@ -1,0 +1,43 @@
+#playButtonContainer {
+    position: absolute;
+    left: 50px;
+    bottom: 20px;
+    text-align: center;
+}
+
+#playButton {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 18px;
+    cursor: pointer;
+    margin-top: 10px;
+    margin-left: 10px;
+}
+
+#teclaIndicacionesTable {
+    position: relative;
+    border-collapse: collapse;
+    margin-left: 20px;
+    margin-top: 60Px;
+}
+
+#teclaIndicacionesTable p {
+    text-align: center;
+}
+
+#hold {
+    position: relative;
+    margin-top: -25px;
+    margin-left: 15px;
+    margin-right: 100px;
+}
+
+#next {
+    position: relative;
+    margin-top: -40px;
+    margin-left: 120px;
+    margin-right: 100px;
+}
