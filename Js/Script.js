@@ -1,5 +1,5 @@
 let lastKeyPressTime = 0;
-const inputDelay = 150;
+const inputDelay = 100;
 let savedThisTurn = false;
 
 function keyEvents() {
@@ -8,7 +8,7 @@ function keyEvents() {
         if (keyIsDown(RIGHT_ARROW)) { tetriminoActivo.moverHorizontalmente(1); lastKeyPressTime = millis(); }
         if (keyIsDown(LEFT_ARROW)) { tetriminoActivo.moverHorizontalmente(-1); lastKeyPressTime = millis(); }
         if (keyIsDown(DOWN_ARROW)) { tetriminoActivo.fallInterval = 100; } else {
-            tetriminoActivo.fallInterval = 1000;
+            tetriminoActivo.fallInterval = fallSpeed;
         }
 
         if (keyIsDown(32) && !spacePressed) {
@@ -61,11 +61,27 @@ function mostrarGameOver() {
     text("Game Over", x, y);
 }
 
+function displayScore() {
+    fill(255);
+    textSize(20);
+    const scoreText = "Score: " + score;
+    const timeText = "Time: " + Math.floor(millis() / 1000);
+    text(scoreText, 10, 30);
+    text(timeText, 10, 50);
+
+    if (level < stages.length) {
+        if (stages[level].scoreRequired <= score) {
+            fallSpeed = stages[level].fallInterval;
+            level++;
+        }
+    }
+}
+
 function generarNuevoTetrimino() {
-    tetriminoActivo = colaTetriminos[0];
-    colaTetriminos[0] = colaTetriminos[1];
-    colaTetriminos[1] = colaTetriminos[2];
-    colaTetriminos[2] = new Tetrimino();
+    tetriminoActivo = colaTetriminos[2];
+    colaTetriminos[2] = colaTetriminos[1];
+    colaTetriminos[1] = colaTetriminos[0];
+    colaTetriminos[0] = new Tetrimino();
 }
 
 function dibujarTetriminoEnCanvas(canvas, tetrimino) {
