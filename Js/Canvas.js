@@ -18,7 +18,6 @@ function setup() {
     displayScore();
 
     colaTetriminosCanvas = select("#colaTetriminosCanvas");
-
     font = loadFont('../Font/Retro Gaming.ttf');
     textFont(font);
 
