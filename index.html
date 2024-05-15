@@ -45,7 +45,10 @@
         }, 500);
 
         function setup() {
-            createCanvas(900, 600);
+            let canvas = createCanvas(900, 600);
+            let x = (windowWidth - (width/3.5)) / 2;
+            let y = (windowHeight - height) / 2;
+            canvas.position(x, y);
             tablero = new Tablero();
             crearMapeoBaseTetriminos();
             tetrimino = new Tetrimino();
@@ -120,7 +123,7 @@
                 playSound("girar_sound");
                 regulador_de_caida = millis();
             }
-            
+
             if (keyIsDown(32)) {
                 tetrimino.caidaLibre();
                 regulador_de_caida = millis();
