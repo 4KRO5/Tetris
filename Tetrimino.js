@@ -24,6 +24,13 @@ class Tetrimino {
     }
   }
 
+  caidaLibre() {
+    while (!this.movimientoErroneo) {
+      this.posición.y++;
+    }
+    this.posición.y--;
+  }
+
   moverAbajo() {
     this.posición.y++;
     if (this.movimientoErroneo) {
@@ -155,7 +162,6 @@ class Tetrimino {
 }
 
 function crearMapeoBaseTetriminos() {
-  //Muy importante, no le pondan let, var, ni const de prefijo
   tetriminosBase = {
     Z: {
       color: "red",

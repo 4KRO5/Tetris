@@ -11,7 +11,7 @@
     <audio id="background_music" loop>
         <source src="sound/tetris_music.ogg" type="audio/ogg">
     </audio>
-    
+
     <audio id="girar_sound" src="sound/tetris_blockrotate.ogg"></audio>
     <audio id="caida_sound" src="sound/fall.wav"></audio>
     <audio id="mover_sound" src="sound/tetris_blockmove.ogg"></audio>
@@ -26,6 +26,10 @@
         let angulo_fondo = Math.random() * 360;
         let tono_fondo = Math.random() * 360;
         let límite_regulador_velocidad_teclas = 100;
+        const puntosPorLinea = 100;
+        let nivel = 1;
+        let lineasRequeridas = nivel * 5;
+        let puntos = 0;
 
         setInterval(() => {
             angulo_fondo += Math.random();
@@ -60,6 +64,16 @@
             backgroundMusic.play();
         }
 
+        function reiniciarJuego() {
+            tablero = new Tablero();
+            tetrimino = new Tetrimino();
+            puntos = 0;
+            nivel = 1;
+            lineasRequeridas = nivel * 5;
+            lineas_hechas = 0;
+            juegoTerminado = false;
+        }
+
         function dibuajarPuntaje() {
             push();
             textSize(20);
@@ -67,9 +81,14 @@
             stroke("black");
             fill("white");
             text(
-                "Líneas: " + lineas_hechas,
+                "Puntos: " + puntos,
                 tablero.posición.x,
                 tablero.posición.y - tablero.lado_celda / 2
+            );
+            text(
+                "Nivel: " + nivel,
+                tablero.posición.x,
+                tablero.posición.y - tablero.lado_celda / 2 + 30
             );
             pop();
         }
@@ -99,6 +118,11 @@
                 límite_regulador_velocidad_teclas = 150;
                 tetrimino.girar();
                 playSound("girar_sound");
+                regulador_de_caida = millis();
+            }
+            
+            if (keyIsDown(32)) {
+                tetrimino.caidaLibre();
                 regulador_de_caida = millis();
             }
         }

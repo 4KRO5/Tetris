@@ -7,7 +7,7 @@ class Tablero {
     this.alto = this.filas * this.lado_celda;
     this.posición = createVector(
       MARGEN_TABLERO,
-      MARGEN_TABLERO + 2*this.lado_celda
+      MARGEN_TABLERO + 2 * this.lado_celda
     );
 
     this.minosAlmacenados = [];
@@ -22,7 +22,6 @@ class Tablero {
   set almacenarMino(tetrimino) {
     for (const pmino of tetrimino.mapaTablero) {
       if (pmino.y < 0) {
-        //Juego términado
         tablero = new Tablero();
         tetrimino = new Tetrimino();
         lineas_hechas = 0;
@@ -51,16 +50,17 @@ class Tablero {
 
   borrarLíneasHorizontales(lineas) {
     lineas_hechas += lineas.length;
+    puntos += lineas.length * puntosPorLinea;
+    if (lineas_hechas >= lineasRequeridas) {
+        nivel++;
+        lineasRequeridas = nivel * 5;
+    }
     for (const linea of lineas) {
-      for (let fila = linea; fila >= 0; fila--) {
-        for (let columna = 0; columna < this.columnas; columna++) {
-          if (fila == 0) {
-            this.minosAlmacenados[columna][fila] = "";
-            continue;
-          }
-          this.minosAlmacenados[columna][fila] =
-            this.minosAlmacenados[columna][fila - 1];
+      for (let columna = 0; columna < this.columnas; columna++) {
+        for (let fila = linea; fila > 0; fila--) {
+          this.minosAlmacenados[columna][fila] = this.minosAlmacenados[columna][fila - 1];
         }
+        this.minosAlmacenados[columna][0] = "";
       }
     }
   }
@@ -72,13 +72,9 @@ class Tablero {
   dibujar() {
     push();
     noStroke();
+    fill("black");
     for (let columna = 0; columna < this.columnas; columna++) {
       for (let fila = 0; fila < this.filas; fila++) {
-        if ((columna + fila) % 2 == 0) {
-          fill("black");
-        } else {
-          fill("#003");
-        }
         let c = this.coordenada(columna, fila);
         rect(c.x, c.y, this.lado_celda);
       }
